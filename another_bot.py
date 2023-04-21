@@ -6,6 +6,7 @@ import telebot
 bot = telebot.TeleBot("5799715226:AAGIxO_X_L_fzZOWtcS9-PpU2fWSHRTk8KY")
 
 
+# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, "Привет! Я бот для конвертации валют. Введите команду /convert для начала конвертации.")
@@ -20,6 +21,7 @@ def send_help(message):
                  '/convert [сумма] [валюта1] [валюта2].')
 
 
+# Обработчик команды /convert
 @bot.message_handler(commands=['convert'])
 def convert(message):
     try:
@@ -48,10 +50,16 @@ def convert(message):
         bot.reply_to(message,
                      f"{amount} {base} = {result_cbr} RUB (Центральный Банк России) и {result_normal} {target} (обычный"
                      f" курс).")
+
+    # Неверный формат ввода
     except ValueError:
         bot.reply_to(message,
                      "Неверный формат команды. Пожалуйста, введите команду в формате /convert [сумма] [валюта1] [валю"
                      "та2]. Например, /convert 100 USD RUB.")
+
+    # Неверный формат валюты
+    except KeyError:
+        bot.reply_to(message, "Неверный код валюты. Пожалуйста, введите корректный код валюты.")
 
 
 bot.polling()
